@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GuTrailers</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+    <!-- Tela de Login -->
+    <div id="loginScreen">
+        <div class="login-box">
+            <h2>Login</h2>
+            <form id="loginForm">
+                <div class="textbox">
+                    <input type="text" placeholder="Usuário" id="username" required>
+                </div>
+                <div class="textbox">
+                    <input type="password" placeholder="Senha" id="password" required>
+                </div>
+                <button type="submit" class="btn">Entrar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Conteúdo Principal (vídeos) -->
+    <div id="mainContent" style="display: none;">
+        <video id="video1" autoplay muted>
+            <source src="/videos_site/Marvel Studios' Avengers_ Endgame - Official Trailer.mp4" type="video/mp4">
+            Seu navegador não suporta o formato de vídeo.
+        </video>
+
+        <video id="video2" style="display: none;">
+            <source src="/videos_site/Marvel Studios' Avengers_ Infinity War Official Trailer (1).mp4" type="video/mp4">
+            Seu navegador não suporta o formato de vídeo.
+        </video>
+
+        <div class="border">
+            <div id="logo"></div>
+            <h2>GuTrailers</h2>
+        </div>
+
+        <!-- Controles personalizados -->
+        <div class="video-controls">
+            <button id="prevBtn"><i class="fas fa-chevron-left"></i></button>
+            <button id="playPauseBtn"><i class="fas fa-play"></i></button>
+            <button id="volumeBtn"><i class="fas fa-volume-up"></i></button>
+            <button id="nextBtn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+
+        <!-- Informações dos Filmes -->
+        <div id="filmInfo1" class="film-info">
+            <h3>Avengers: Endgame</h3>
+            <p>A batalha final contra Thanos chega ao seu clímax, com os Vingadores lutando para reverter o caos que o Titã Louco causou.</p>
+        </div>
+
+        <div id="filmInfo2" class="film-info">
+            <h3>Avengers: Infinity War</h3>
+            <p>Os Vingadores se unem a outros heróis para enfrentar Thanos, que busca reunir as Joias do Infinito e dominar o universo.</p>
+        </div>
+    </div>
+
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const mainContent = document.getElementById('mainContent');
+        const loginScreen = document.getElementById('loginScreen');
+        const video1 = document.getElementById('video1');
+        const video2 = document.getElementById('video2');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const volumeBtn = document.getElementById('volumeBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const filmInfo1 = document.getElementById('filmInfo1');
+        const filmInfo2 = document.getElementById('filmInfo2');
+
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            if (username === 'admin' && password === 'admin') {
+                loginScreen.style.display = 'none';
+                mainContent.style.display = 'block';
+            } else {
+                alert('Usuário ou senha incorretos');
+            }
+        });
+
+        let currentVideo = video1;
+
+        function playVideo(videoElement) {
+            currentVideo.pause();
+            currentVideo.style.display = 'none';
+            videoElement.style.display = 'block';
+            videoElement.play();
+            currentVideo = videoElement;
+
+            // Atualiza as informações dos filmes
+            if (currentVideo === video1) {
+                filmInfo1.style.opacity = 1;
+                filmInfo2.style.opacity = 0;
+            } else {
+                filmInfo1.style.opacity = 0;
+                filmInfo2.style.opacity = 1;
+            }
+        }
+
+        playPauseBtn.addEventListener('click', () => {
+            if (currentVideo.paused) {
+                currentVideo.play();
+                playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            } else {
+                currentVideo.pause();
+                playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+            }
+        });
+
+        volumeBtn.addEventListener('click', () => {
+            currentVideo.muted = !currentVideo.muted;
+            volumeBtn.innerHTML = currentVideo.muted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentVideo === video1) {
+                playVideo(video2);
+            } else {
+                playVideo(video1);
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentVideo === video2) {
+                playVideo(video1);
+            } else {
+                playVideo(video2);
+            }
+        });
+
+        currentVideo.addEventListener('ended', () => {
+            nextBtn.click();
+        });
+
+        // Inicializa com o vídeo1 e informações
+        playVideo(video1);
+    </script>
+</body>
+</html>
